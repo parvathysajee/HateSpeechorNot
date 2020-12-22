@@ -17,15 +17,17 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
-
+from sklearn.metrics import mean_squared_error
+import numpy as np
 
 
 
 def main():
-    d = pd.read_csv('C:/Users/91949/Desktop/ML/grpproj/1_2000_Labelled.csv')
+    d = pd.read_csv('1_2000_Labelled.csv')
     x= d['Comments']; y=d ['Target']
     xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2)
     Xtrain,Xtest = preproc(xtrain,xtest)
+    cross_validate(Xtrain,ytrain,Xtest,ytest)
     preds=classify(Xtrain,ytrain,Xtest,ytest)
     print(classification_report(ytest, preds))
     print(confusion_matrix(ytest, preds))
@@ -76,6 +78,24 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     plt.plot([0, 1], [0, 1], color="green",linestyle="--")
     plt.show()
     return preds
+
+def cross_validate(Xtrain,ytrain,Xtest,ytest):
+    mean_error = []
+    std_error = []
+    Ci_range = [0.01,0.1,1,10,100,1000]
+    for Ci in Ci_range:
+        model = LinearSVC(C=Ci)
+        model.fit(Xtrain, ytrain)
+        preds = model.predict(Xtest)
+        temp = mean_squared_error(ytest,preds)
+        mean_error.append(np.array(temp).mean())
+        std_error.append(np.array(temp).std())
+        
+    plt.errorbar(Ci_range,mean_error,yerr=std_error)
+    plt.xlabel('Ci')
+    plt.ylabel('Mean square error')
+    plt.title('Ci vs Mean Squared Error')
+    plt.show()
 
 
 
