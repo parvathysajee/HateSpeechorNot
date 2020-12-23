@@ -26,7 +26,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 
 def main():
-    d = pd.read_csv('C:/Users/91949/Desktop/ML/grpproj/1_2000_Labelled.csv')
+    d = pd.read_csv('1_2000_Labelled.csv')
     x= d['Comments']; y=d ['Target']
     
     xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2)
