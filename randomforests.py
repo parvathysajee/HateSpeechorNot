@@ -16,7 +16,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
 import re
-from sklearn.metrics import mean_squared_error
+from sklearn import metrics
 import numpy as np
 
 
@@ -32,7 +32,6 @@ def main():
     print(confusion_matrix(ytest, preds))
     
    
-    
 
 def preproc(xtrain,xtest):
     xtrain_1=[]
@@ -79,21 +78,18 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     return preds
 
 def cross_validate(Xtrain,ytrain,Xtest,ytest):
-    mean_error = []
-    std_error = []
+    accuracy_value = []
     depth_range = [1,5,10,15,20,25]
     for depth_i in depth_range:
         model = RandomForestClassifier(max_depth=depth_i, random_state=0)
         model.fit(Xtrain, ytrain)
         preds = model.predict(Xtest)
-        temp = mean_squared_error(ytest,preds)
-        mean_error.append(np.array(temp).mean())
-        std_error.append(np.array(temp).std())
+        accuracy_value.append(metrics.accuracy_score(ytest, preds))
         
-    plt.errorbar(depth_range,mean_error,yerr=std_error)
+    plt.errorbar(depth_range,accuracy_value)
     plt.xlabel('Max_Depth_i')
-    plt.ylabel('Mean square error')
-    plt.title('Max_Depth_i vs Mean Squared Error')
+    plt.ylabel('Accuracy')
+    plt.title('Max_Depth_i vs Accuracy')
     plt.show()
 
 

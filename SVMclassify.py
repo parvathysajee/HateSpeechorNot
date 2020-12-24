@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
-from sklearn.metrics import mean_squared_error
+from sklearn import metrics
 import numpy as np
 
 
@@ -66,7 +66,7 @@ def preproc(xtrain,xtest):
     return (Xtrain,Xtest)
 
 def classify(Xtrain,ytrain,Xtest,ytest):
-    model = LinearSVC(C=0.1)
+    model = LinearSVC(C=1)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
     print(cross_val_score(model, Xtest, ytest, cv=2,scoring='roc_auc'))
@@ -80,21 +80,18 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     return preds
 
 def cross_validate(Xtrain,ytrain,Xtest,ytest):
-    mean_error = []
-    std_error = []
+    accuracy_value = []
     Ci_range = [0.01,0.1,1,10,100]
     for Ci in Ci_range:
         model = LinearSVC(C=Ci)
         model.fit(Xtrain, ytrain)
         preds = model.predict(Xtest)
-        temp = mean_squared_error(ytest,preds)
-        mean_error.append(np.array(temp).mean())
-        std_error.append(np.array(temp).std())
+        accuracy_value.append(metrics.accuracy_score(ytest, preds))
         
-    plt.errorbar(Ci_range,mean_error,yerr=std_error)
+    plt.errorbar(Ci_range,accuracy_value)
     plt.xlabel('Ci')
-    plt.ylabel('Mean square error')
-    plt.title('Ci vs Mean Squared Error')
+    plt.ylabel('Accuracy')
+    plt.title('Ci vs Accuracy')
     plt.show()
 
 

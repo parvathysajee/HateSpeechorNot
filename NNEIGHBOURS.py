@@ -18,7 +18,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
 import re
-from sklearn.metrics import mean_squared_error
+from sklearn import metrics
 import numpy as np
 
 
@@ -69,7 +69,7 @@ def preproc(xtrain,xtest):
     return (Xtrain,Xtest)
 
 def classify(Xtrain,ytrain,Xtest,ytest):
-    model = KNeighborsClassifier(n_neighbors=5)
+    model = KNeighborsClassifier(n_neighbors=3)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
     print(cross_val_score(model, Xtest, ytest, cv=3,scoring='roc_auc'))
@@ -82,21 +82,18 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     return preds
 
 def cross_validate(Xtrain,ytrain,Xtest,ytest):
-    mean_error = []
-    std_error = []
+    accuracy_value = []
     ki_range = [1,2,3,4,5,6]
     for ki in ki_range:
         model = KNeighborsClassifier(n_neighbors=ki)
         model.fit(Xtrain, ytrain)
         preds = model.predict(Xtest)
-        temp = mean_squared_error(ytest,preds)
-        mean_error.append(np.array(temp).mean())
-        std_error.append(np.array(temp).std())
+        accuracy_value.append(metrics.accuracy_score(ytest, preds))
         
-    plt.errorbar(ki_range,mean_error,yerr=std_error)
+    plt.errorbar(ki_range,accuracy_value)
     plt.xlabel('ki')
-    plt.ylabel('Mean square error')
-    plt.title('ki vs Mean Squared Error')
+    plt.ylabel('Accuracy')
+    plt.title('ki vs Accuracy')
     plt.show()
 
 
