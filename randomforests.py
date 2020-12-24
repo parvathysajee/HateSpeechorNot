@@ -67,7 +67,7 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     model = RandomForestClassifier(max_depth=25, random_state=0)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
-    print(cross_val_score(model, Xtest, ytest, cv=3,scoring='roc_auc'))
+    print(roc_auc_score(preds,ytest))
     
     fpr, tpr, _ = roc_curve(ytest,model.predict_proba(Xtest)[:,1])
     plt.plot(fpr,tpr)
