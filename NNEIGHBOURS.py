@@ -72,7 +72,7 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     model = KNeighborsClassifier(n_neighbors=3)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
-    print(cross_val_score(model, Xtest, ytest, cv=3,scoring='roc_auc'))
+    print(roc_auc_score(preds,ytest))
     fpr, tpr, _ = roc_curve(ytest,model.predict_proba(Xtest)[:,1])
     plt.plot(fpr,tpr)
     plt.xlabel("False positive rate")
