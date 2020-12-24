@@ -66,7 +66,7 @@ def preproc(xtrain,xtest):
     return (Xtrain,Xtest)
 
 def classify(Xtrain,ytrain,Xtest,ytest):
-    model = LinearSVC(C=1000)
+    model = LinearSVC(C=0.1)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
     print(cross_val_score(model, Xtest, ytest, cv=2,scoring='roc_auc'))
@@ -82,7 +82,7 @@ def classify(Xtrain,ytrain,Xtest,ytest):
 def cross_validate(Xtrain,ytrain,Xtest,ytest):
     mean_error = []
     std_error = []
-    Ci_range = [0.01,0.1,1,10,100,1000]
+    Ci_range = [0.01,0.1,1,10,100]
     for Ci in Ci_range:
         model = LinearSVC(C=Ci)
         model.fit(Xtrain, ytrain)

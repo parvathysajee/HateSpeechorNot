@@ -16,15 +16,17 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import roc_curve
 import re
-
+from sklearn.metrics import mean_squared_error
+import numpy as np
 
 
 
 def main():
-    d = pd.read_csv('C:/Users/91949/Desktop/ML/grpproj/1_2000_Labelled.csv')
+    d = pd.read_csv('1_2000_Labelled.csv')
     x= d['Comments']; y=d ['Target']
     xtrain, xtest, ytrain, ytest = train_test_split(x, y, test_size=0.2)
     Xtrain,Xtest = preproc(xtrain,xtest)
+    cross_validate(Xtrain,ytrain,Xtest,ytest)
     preds=classify(Xtrain,ytrain,Xtest,ytest)
     print(classification_report(ytest, preds))
     print(confusion_matrix(ytest, preds))
@@ -63,7 +65,7 @@ def preproc(xtrain,xtest):
     return (Xtrain,Xtest)
 
 def classify(Xtrain,ytrain,Xtest,ytest):
-    model = RandomForestClassifier(max_depth=2, random_state=0)
+    model = RandomForestClassifier(max_depth=25, random_state=0)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
     print(cross_val_score(model, Xtest, ytest, cv=3,scoring='roc_auc'))
@@ -75,6 +77,24 @@ def classify(Xtrain,ytrain,Xtest,ytest):
     plt.plot([0, 1], [0, 1], color="green",linestyle="--")
     plt.show()
     return preds
+
+def cross_validate(Xtrain,ytrain,Xtest,ytest):
+    mean_error = []
+    std_error = []
+    depth_range = [1,5,10,15,20,25]
+    for depth_i in depth_range:
+        model = RandomForestClassifier(max_depth=depth_i, random_state=0)
+        model.fit(Xtrain, ytrain)
+        preds = model.predict(Xtest)
+        temp = mean_squared_error(ytest,preds)
+        mean_error.append(np.array(temp).mean())
+        std_error.append(np.array(temp).std())
+        
+    plt.errorbar(depth_range,mean_error,yerr=std_error)
+    plt.xlabel('Max_Depth_i')
+    plt.ylabel('Mean square error')
+    plt.title('Max_Depth_i vs Mean Squared Error')
+    plt.show()
 
 
 

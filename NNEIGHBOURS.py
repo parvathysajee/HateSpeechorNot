@@ -69,7 +69,7 @@ def preproc(xtrain,xtest):
     return (Xtrain,Xtest)
 
 def classify(Xtrain,ytrain,Xtest,ytest):
-    model = KNeighborsClassifier(n_neighbors=3)
+    model = KNeighborsClassifier(n_neighbors=5)
     model.fit(Xtrain, ytrain)
     preds = model.predict(Xtest)
     print(cross_val_score(model, Xtest, ytest, cv=3,scoring='roc_auc'))
