@@ -8,6 +8,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 import nltk
+from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import cross_val_score
 from nltk.tokenize import WhitespaceTokenizer
 from nltk.tokenize import word_tokenize
