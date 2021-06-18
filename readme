@@ -1,0 +1,3 @@
+This project is implemented for checking whether online comments contain hatespeech or not.
+The data set contains youtube comments
+We have used different models like the decisiom tree,random forests,KNN and also vader sentiment analysis and python library to compare efficiency
